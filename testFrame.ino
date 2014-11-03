@@ -22,6 +22,9 @@ void loop()
 {
   vectorX=0;
   vectorY=0;
+  if(Esplora.readButton(SWITCH_DOWN)==LOW){
+    f.drawPoint(f.getPointPositionX(playerPoint),f.getPointPositionY(playerPoint));
+  }
   if(Esplora.readJoystickY() < -256){
     vectorY+=1;
   }

@@ -18,6 +18,20 @@ Frame::Frame(int x,int y)
       existVirtualScreen[i]=false;
     }
 }
+void Frame::needSpace(int nb)
+{
+  int compteur=0;
+  for(int i=0;i<NB_MAX_POINTS&&compteur<nb;i++)
+    {
+
+      if(existPoint[i]){
+	clearPoint(i);
+	existPoint[i]=false;
+
+	compteur+=1;
+      }
+    }
+}
 void Frame::addVirtualScreen(int largeur,int hauteur,int x,int y)
 {
   for(int i=0;i<NB_MAX_VIRTUAL_SCREEN;i++)
@@ -72,6 +86,7 @@ int Frame::drawPoint(int x,int y,int r,int g, int b)
 	  return i;
 	}
     }
+  needSpace();
   
 }
 void Frame::clearScreen(int numero)
@@ -100,6 +115,14 @@ void Frame::clearPoint(int id)
 
     }
   }
+}
+int Frame::getPointPositionX(int id)
+{
+  return points[id].x; 
+}
+int Frame::getPointPositionY(int id)
+{
+  return points[id].y; 
 }
 void Frame::movePoint(int id,int addx,int addy)
 {
