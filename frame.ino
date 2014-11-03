@@ -12,6 +12,7 @@ Frame::Frame(int x,int y)
   for(int i=0;i<NB_MAX_POINTS;i++)
     {
       existPoint[i]=false;
+      isSecurePoint[i]=false;
     }
   for(int i=0;i<NB_MAX_VIRTUAL_SCREEN;i++)
     {
@@ -25,10 +26,11 @@ void Frame::needSpace(int nb)
     {
 
       if(existPoint[i]){
-	clearPoint(i);
+	if(clearPoint(i)){
 	existPoint[i]=false;
 
 	compteur+=1;
+	}
       }
     }
 }
@@ -71,7 +73,7 @@ int Frame::getNbOfCurrentVirtualScreen()
 {
   return currentScreen;
 }
-int Frame::drawPoint(int x,int y,int r,int g, int b)
+int Frame::drawPoint(int x,int y,boolean secure,int r,int g, int b)
 {
   for(int i=0;i<NB_MAX_POINTS;i++)
     {
@@ -83,6 +85,7 @@ int Frame::drawPoint(int x,int y,int r,int g, int b)
 	  points[i].g=g;
 	  points[i].b=b;
 	  existPoint[i]=true;
+	  isSecurePoint[i]=secure;
 	  return i;
 	}
     }
@@ -105,16 +108,18 @@ void Frame::clearScreen(int numero)
 
  }
 }
-void Frame::clearPoint(int id)
+boolean Frame::clearPoint(int id)
 {
   if(currentScreen!=-1){
      VirtualScreen v=virtualsScreen[currentScreen];
     EsploraTFT.stroke(BACKGROUND_COLOR_R,BACKGROUND_COLOR_G,BACKGROUND_COLOR_B);
     if(existPoint[id]&&pointsIsInVirtualScreen(points[id],v)){
 	EsploraTFT.point(points[id].x-v.posX,points[id].y-v.posY);
-
+	return true;
     }
+    
   }
+  return false;
 }
 int Frame::getPointPositionX(int id)
 {
@@ -151,17 +156,17 @@ boolean Frame::pointsIsInVirtualScreen(Points p,VirtualScreen v)
     }
   return false;
 }
-void Frame::drawRectangle(int x, int y,int largeur ,int hauteur)
+void Frame::drawRectangle(int x, int y,int largeur ,int hauteur,boolean secure)
 {
   for(int x1=x;x1<largeur+x;x1++)
     {
-      drawPoint(x1,y);
-      drawPoint(x1,y+hauteur);
+      drawPoint(x1,y,secure);
+      drawPoint(x1,y+hauteur,secure);
     }
     for(int y1=y;y1<hauteur+y;y1++)
     {
-      drawPoint(x,y1);
-      drawPoint(x+largeur,y1);
+      drawPoint(x,y1,secure);
+      drawPoint(x+largeur,y1,secure);
     }
 }
 void Frame::drawCurrentScreen()
@@ -175,7 +180,7 @@ void Frame::drawCurrentScreen()
       if(existPoint[i])
 	{
 
-	  Serial.println(i);
+
 	  if(pointsIsInVirtualScreen(points[i],v)){
 	    
 	    EsploraTFT.stroke(points[i].r,points[i].g,points[i].b);
