@@ -1,7 +1,5 @@
 #include "frame.h"
-#define DEF_R 255
-#define DEF_G 255
-#define DEF_B 255
+
 #define BACKGROUND_COLOR_R 0
 #define BACKGROUND_COLOR_G 0
 #define BACKGROUND_COLOR_B 0

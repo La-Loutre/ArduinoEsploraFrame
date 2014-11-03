@@ -3,6 +3,7 @@
 #include <TFT.h>
 #include <SPI.h>
 Frame f;
+int playerPoint;
 void setup()
 {
   Serial.begin(9600);
@@ -10,9 +11,11 @@ void setup()
   EsploraTFT.background(0,0,0);
   f.addVirtualScreen(EsploraTFT.width(),EsploraTFT.height(),0,0);
   f.drawPoint(10,10);
-  f.drawPoint(15,15);
+  playerPoint=f.drawPoint(EsploraTFT.width()/2,EsploraTFT.height()/2,0,255,0);
+  f.drawRectangle(50,50,10,10);
   //f.drawPoint(25,15);
 }
+
 int vectorX=0;
 int vectorY=0;
 void loop()
@@ -31,11 +34,14 @@ void loop()
   else if(Esplora.readJoystickX() > 256){
     vectorX+=1;
   }
-  if(vectorX!=0||vectorY!=0)
+  if(vectorX!=0||vectorY!=0){
+    f.movePoint(playerPoint,vectorX,vectorY);
     f.moveScreen(f.getNbOfCurrentVirtualScreen(),vectorX,vectorY);
+
+  }
   else
     f.drawCurrentScreen();
   
 
-  delay(10);
+  delay(1);
 }
