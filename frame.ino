@@ -56,7 +56,9 @@ void Frame::addVirtualScreen(int largeur,int hauteur,int x,int y)
 void Frame::setVirtualScreen(int numero)
 {
   //Pas de vérification pour le moment.
+  clearScreen(currentScreen);
   currentScreen=numero;
+  
 }
 int Frame::getNbOfVirtualScreen()
 {

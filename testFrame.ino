@@ -10,6 +10,7 @@ void setup()
   EsploraTFT.begin();
   EsploraTFT.background(0,0,0);
   f.addVirtualScreen(EsploraTFT.width(),EsploraTFT.height(),0,0);
+  f.addVirtualScreen(EsploraTFT.width(),EsploraTFT.height(),50,50);
   f.drawPoint(10,10);
   playerPoint=f.drawPoint(EsploraTFT.width()/2,EsploraTFT.height()/2,true,0,255,0);
   f.drawRectangle(50,50,10,10,true);
@@ -20,6 +21,8 @@ int vectorX=0;
 int vectorY=0;
 int vectorXPlayer=0;
 int vectorYPlayer=0;
+boolean lockLowJoystick=false;
+int idVirtualScreen=0;
 void loop()
 {
  
@@ -43,6 +46,19 @@ void loop()
     {
       vectorXPlayer+=1;
     }
+  if(Esplora.readJoystickButton()==HIGH)
+    {
+      lockLowJoystick=false;
+    }
+  if(Esplora.readJoystickButton()==LOW&&lockLowJoystick==false)
+    {
+      lockLowJoystick=true;
+      idVirtualScreen=(idVirtualScreen+1)%2;
+      f.setVirtualScreen(idVirtualScreen);
+
+      
+    }
+  
   if(Esplora.readJoystickY() < -256){
     vectorY+=1;
   }
