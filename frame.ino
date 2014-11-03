@@ -35,6 +35,7 @@ void Frame::addVirtualScreen(int largeur,int hauteur,int x,int y)
 	    {
 	      currentScreen=i;
 	    }
+	  break;
 	}
     }
 }
@@ -70,6 +71,7 @@ void Frame::drawPoint(int x,int y)
 	  points[i].g=DEF_G;
 	  points[i].b=DEF_B;
 	  existPoint[i]=true;
+	  break;
 	}
     }
   
@@ -118,7 +120,7 @@ void Frame::drawCurrentScreen()
       if(existPoint[i])
 	{
 
-	  
+	  Serial.println(i);
 	  if(pointsIsInVirtualScreen(points[i],v)){
 	    
 	    EsploraTFT.stroke(points[i].r,points[i].g,points[i].b);

@@ -5,11 +5,13 @@
 Frame f;
 void setup()
 {
+  Serial.begin(9600);
   EsploraTFT.begin();
   EsploraTFT.background(0,0,0);
   f.addVirtualScreen(EsploraTFT.width(),EsploraTFT.height(),0,0);
   f.drawPoint(10,10);
-  f.drawPoint(100,100);
+  f.drawPoint(15,15);
+  //f.drawPoint(25,15);
 }
 int vectorX=0;
 int vectorY=0;
@@ -35,5 +37,5 @@ void loop()
     f.drawCurrentScreen();
   
 
-  delay(100);
+  delay(10);
 }
