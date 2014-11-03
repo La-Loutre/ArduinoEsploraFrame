@@ -1,0 +1,4 @@
+#ifndef POINTS_H
+#define POINTS_H
+typedef struct points Points;
+#endif

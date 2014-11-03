@@ -1,0 +1,4 @@
+#ifndef VIRTUAL_SCREEN_H
+#define VIRTUAL_SCREEN_H
+typedef struct virtualScreen VirtualScreen;
+#endif
