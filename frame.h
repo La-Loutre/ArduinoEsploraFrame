@@ -18,7 +18,7 @@ public :
   void setVirtualScreen(int );//numero
   int getNbOfVirtualScreen();
   int getNbOfCurrentVirtualScreen();
-  void moveScreen(int,int,int);//numeroScreen , addx,addy
+  void moveScreen(int,int,int,boolean);//numeroScreen , addx,addy ,draw the screen at the end 
   void movePoint(int,int,int);//Id point , addx , addy
   int drawPoint(int ,int,int=DEF_R,int=DEF_G,int=DEF_B);//x ,y (frame based),r,g,b, renvoie l'id du point 
   boolean pointsIsInVirtualScreen(Points ,VirtualScreen );

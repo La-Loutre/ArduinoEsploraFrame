@@ -35,13 +35,14 @@ void loop()
     vectorX+=1;
   }
   if(vectorX!=0||vectorY!=0){
+    f.moveScreen(f.getNbOfCurrentVirtualScreen(),vectorX,vectorY,false);
     f.movePoint(playerPoint,vectorX,vectorY);
-    f.moveScreen(f.getNbOfCurrentVirtualScreen(),vectorX,vectorY);
+    
 
   }
   else
     f.drawCurrentScreen();
   
 
-  delay(1);
+  delay(5);
 }

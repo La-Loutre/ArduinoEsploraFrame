@@ -1,7 +1,5 @@
 #include "frame.h"
-#define DEF_R 255
-#define DEF_G 255
-#define DEF_B 255
+
 #define BACKGROUND_COLOR_R 0
 #define BACKGROUND_COLOR_G 0
 #define BACKGROUND_COLOR_B 0
@@ -113,13 +111,13 @@ void Frame::movePoint(int id,int addx,int addy)
       drawCurrentScreen();
     }
 }
-void Frame::moveScreen(int numeroScreen,int x,int y)
+void Frame::moveScreen(int numeroScreen,int x,int y,boolean draw)
 {
   clearScreen(numeroScreen);
   virtualsScreen[numeroScreen].posX+=x;
   virtualsScreen[numeroScreen].posY+=y;
- 
-  if(numeroScreen==currentScreen)
+  
+  if(numeroScreen==currentScreen && draw)
     drawCurrentScreen();
 }
 boolean Frame::pointsIsInVirtualScreen(Points p,VirtualScreen v)
