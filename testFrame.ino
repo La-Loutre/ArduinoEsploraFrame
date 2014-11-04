@@ -11,10 +11,11 @@ void setup()
   EsploraTFT.background(0,0,0);
   f.addVirtualScreen(EsploraTFT.width(),EsploraTFT.height(),0,0);
   f.addVirtualScreen(EsploraTFT.width(),EsploraTFT.height(),50,50);
-  f.drawPoint(10,10);
-  playerPoint=f.drawPoint(EsploraTFT.width()/2,EsploraTFT.height()/2,true,0,255,0);
-  f.drawRectangle(50,50,10,10,true);
-  //f.drawPoint(25,15);
+  f.addPoint(10,10);
+  f.addLine(10,10,30,30);
+  playerPoint=f.addPoint(EsploraTFT.width()/2,EsploraTFT.height()/2,true,0,255,0);
+  f.addRectangle(50,50,10,10,true);
+  //f.addPoint(25,15);
 }
 
 int vectorX=0;
@@ -31,7 +32,7 @@ void loop()
   vectorYPlayer=0;
   vectorXPlayer=0;
   if(Esplora.readButton(SWITCH_DOWN)==LOW){
-    //f.drawPoint(f.getPointPositionX(playerPoint),f.getPointPositionY(playerPoint));
+    //f.addPoint(f.getPointPositionX(playerPoint),f.getPointPositionY(playerPoint));
     vectorYPlayer+=1;
   
   }

@@ -75,7 +75,21 @@ int Frame::getNbOfCurrentVirtualScreen()
 {
   return currentScreen;
 }
-int Frame::drawPoint(int x,int y,boolean secure,int r,int g, int b)
+int Frame::addLine(int x1,int y1,int x2,int y2,boolean secure,int r,int g,int b)
+{
+  for(int i=0;i<NB_MAX_LINES;i++)
+    {
+      if(!lines[i].exist)
+	{
+	  Lines tmp(x1,y1,x2,y2,secure,true,r,g,b);
+	  lines[i]=Lines(x1,y1,x2,y2,secure,true,r,g,b);
+	  break;
+	}
+
+    }
+
+}
+int Frame::addPoint(int x,int y,boolean secure,int r,int g, int b)
 {
   for(int i=0;i<NB_MAX_POINTS;i++)
     {
@@ -103,9 +117,15 @@ void Frame::clearScreen(int numero)
     {
       if(existPoint[i]&&pointsIsInVirtualScreen(points[i],v)){
 	EsploraTFT.point(points[i].x-v.posX,points[i].y-v.posY);
-
+	
       }
-
+      
+    }
+  for(int i=0;i<NB_MAX_LINES;i++)
+    {
+      if(lines[i].exist&&lineIsInVirtualScreen(lines[i],v)){
+	EsploraTFT.line(lines[i].x1-v.posX,lines[i].y1-v.posY,lines[i].x2-v.posX,lines[i].y2-v.posY);
+      }
     }
 
  }
@@ -150,6 +170,19 @@ void Frame::moveScreen(int numeroScreen,int x,int y,boolean draw)
   if(numeroScreen==currentScreen && draw)
     drawCurrentScreen();
 }
+boolean Frame::lineIsInVirtualScreen(Lines l,VirtualScreen v)
+{
+  Points tmp,tmp2;
+  tmp.x=l.x1;
+  tmp.y=l.y1;
+  tmp2.x=l.x2;
+  tmp2.y=l.y2;
+  if(pointsIsInVirtualScreen(tmp,v)||pointsIsInVirtualScreen(tmp2,v)){
+    return true;
+  }
+  return false;
+
+}
 boolean Frame::pointsIsInVirtualScreen(Points p,VirtualScreen v)
 {
   if(p.x>v.posX && p.x < v.posX+v.width && p.y > v.posY && p.y < v.posY+v.heigth)
@@ -158,17 +191,17 @@ boolean Frame::pointsIsInVirtualScreen(Points p,VirtualScreen v)
     }
   return false;
 }
-void Frame::drawRectangle(int x, int y,int largeur ,int hauteur,boolean secure)
+void Frame::addRectangle(int x, int y,int largeur ,int hauteur,boolean secure)
 {
   for(int x1=x;x1<largeur+x;x1++)
     {
-      drawPoint(x1,y,secure);
-      drawPoint(x1,y+hauteur,secure);
+      addPoint(x1,y,secure);
+      addPoint(x1,y+hauteur,secure);
     }
     for(int y1=y;y1<hauteur+y;y1++)
     {
-      drawPoint(x,y1,secure);
-      drawPoint(x+largeur,y1,secure);
+      addPoint(x,y1,secure);
+      addPoint(x+largeur,y1,secure);
     }
 }
 void Frame::drawCurrentScreen()
@@ -190,6 +223,20 @@ void Frame::drawCurrentScreen()
 	    EsploraTFT.point(points[i].x-v.posX,points[i].y-v.posY);
 	  }
 	}
+    }
+  for(int i=0;i<NB_MAX_LINES;i++)
+    {
+     
+      if(lines[i].exist){
+	  
+      	if(lineIsInVirtualScreen(lines[i],v)){
+		  EsploraTFT.stroke(lines[i].r,lines[i].g,lines[i].b);
+	  	  EsploraTFT.line(lines[i].x1-v.posX,lines[i].y1-v.posY,lines[i].x2-v.posX,lines[i].y2-v.posY);
+
+		    }
+
+		        }
+
     }
   }
 }
