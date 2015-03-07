@@ -6,9 +6,9 @@
 #include <Esplora.h>
 
 #define NB_MAX_POINTS 50
-#define NB_MAX_LINES 100
+#define NB_MAX_LINES 20
 #define BASE_POINT_CLEAR NB_MAX_POINTS/5
-#define NB_MAX_VIRTUAL_SCREEN 4
+#define NB_MAX_VIRTUAL_SCREEN 3
 #define DEF_R 255
 #define DEF_G 255
 #define DEF_B 255
@@ -36,6 +36,7 @@ public :
  
 private:
   void clearScreen(int);//numeroScreen
+  void drawLine(int ,int ,int ,int);
   boolean clearPoint(int);//id point , retourne si la suppression à réussi (secure points ne peuvent pas être clear
   void needSpace(int=BASE_POINT_CLEAR); //nb -> nombre de points a supprimer
   int currentScreen;

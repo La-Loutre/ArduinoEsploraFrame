@@ -1,8 +1,9 @@
 #include "frame.h"
-
+#ifndef BACKGROUND_COLOR_R
 #define BACKGROUND_COLOR_R 0
 #define BACKGROUND_COLOR_G 0
 #define BACKGROUND_COLOR_B 0
+#endif
 Frame::Frame(int x,int y)
 {		
   largeur=x;
@@ -79,7 +80,7 @@ int Frame::addLine(int x1,int y1,int x2,int y2,boolean secure,int r,int g,int b)
 {
   for(int i=0;i<NB_MAX_LINES;i++)
     {
-      if(!lines[i].exist)
+      if(!lines[i].fexist())
 	{
 	  Lines tmp(x1,y1,x2,y2,secure,true,r,g,b);
 	  lines[i]=Lines(x1,y1,x2,y2,secure,true,r,g,b);
@@ -108,6 +109,15 @@ int Frame::addPoint(int x,int y,boolean secure,int r,int g, int b)
   needSpace();
   
 }
+void Frame::drawLine(int x1,int y1,int x2,int y2)
+{
+  int y;
+  for(int i=x1;i<x2;i++)
+
+      EsploraTFT.point(i,y);
+
+
+}
 void Frame::clearScreen(int numero)
 {
  if(currentScreen!=-1){
@@ -123,8 +133,13 @@ void Frame::clearScreen(int numero)
     }
   for(int i=0;i<NB_MAX_LINES;i++)
     {
-      if(lines[i].exist&&lineIsInVirtualScreen(lines[i],v)){
-	EsploraTFT.line(lines[i].x1-v.posX,lines[i].y1-v.posY,lines[i].x2-v.posX,lines[i].y2-v.posY);
+      if(lines[i].fexist()&&lineIsInVirtualScreen(lines[i],v)){
+	int x1Repare=lines[i].point1.x-v.posX;
+	if(x1Repare<0){
+	  x1Repare=0;
+	}
+	lines[i].draw(v);
+
       }
     }
 
@@ -173,10 +188,10 @@ void Frame::moveScreen(int numeroScreen,int x,int y,boolean draw)
 boolean Frame::lineIsInVirtualScreen(Lines l,VirtualScreen v)
 {
   Points tmp,tmp2;
-  tmp.x=l.x1;
-  tmp.y=l.y1;
-  tmp2.x=l.x2;
-  tmp2.y=l.y2;
+  tmp.x=l.point1.x;
+  tmp.y=l.point1.y;
+  tmp2.x=l.point2.x;
+  tmp2.y=l.point2.y;
   if(pointsIsInVirtualScreen(tmp,v)||pointsIsInVirtualScreen(tmp2,v)){
     return true;
   }
@@ -227,16 +242,13 @@ void Frame::drawCurrentScreen()
   for(int i=0;i<NB_MAX_LINES;i++)
     {
      
-      if(lines[i].exist){
+      if(lines[i].fexist()){
 	  
       	if(lineIsInVirtualScreen(lines[i],v)){
-		  EsploraTFT.stroke(lines[i].r,lines[i].g,lines[i].b);
-	  	  EsploraTFT.line(lines[i].x1-v.posX,lines[i].y1-v.posY,lines[i].x2-v.posX,lines[i].y2-v.posY);
+	  lines[i].draw(v);
 
-		    }
-
-		        }
+       }
 
     }
   }
-}
+  }}
