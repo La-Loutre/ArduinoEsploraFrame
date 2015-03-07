@@ -12,8 +12,8 @@ Frame::Frame(int x,int y)
   currentScreen=-1;
   for(int i=0;i<NB_MAX_POINTS;i++)
     {
-      existPoint[i]=false;
-      isSecurePoint[i]=false;
+      points[i].setExist(false);
+      points[i].setSecure(false);
     }
   for(int i=0;i<NB_MAX_VIRTUAL_SCREEN;i++)
     {
@@ -26,9 +26,9 @@ void Frame::needSpace(int nb)
   for(int i=0;i<NB_MAX_POINTS&&compteur<nb;i++)
     {
 
-      if(existPoint[i]){
+      if(points[i].fexist()){
 	if(clearPoint(i)){
-	existPoint[i]=false;
+	  points[i].setExist(false);
 
 	compteur+=1;
 	}
@@ -76,33 +76,32 @@ int Frame::getNbOfCurrentVirtualScreen()
 {
   return currentScreen;
 }
-int Frame::addLine(int x1,int y1,int x2,int y2,boolean secure,int r,int g,int b)
+int Frame::addLine(int x1,int y1,int z1,int x2,int y2,int z2,boolean secure,int r,int g,int b)
 {
   for(int i=0;i<NB_MAX_LINES;i++)
     {
       if(!lines[i].fexist())
 	{
-	  Lines tmp(x1,y1,x2,y2,secure,true,r,g,b);
-	  lines[i]=Lines(x1,y1,x2,y2,secure,true,r,g,b);
+	  lines[i]=Lines(x1,y1,z1,x2,y2,z2,secure,true,r,g,b);
 	  break;
 	}
 
     }
 
 }
-int Frame::addPoint(int x,int y,boolean secure,int r,int g, int b)
+int Frame::addPoint(int x,int y,int z,boolean secure,int r,int g, int b)
 {
   for(int i=0;i<NB_MAX_POINTS;i++)
     {
-      if(!existPoint[i])
+      if(!points[i].fexist())
 	{
 	  points[i].x=x;
 	  points[i].y=y;
 	  points[i].r=r;
 	  points[i].g=g;
 	  points[i].b=b;
-	  existPoint[i]=true;
-	  isSecurePoint[i]=secure;
+	  points[i].setExist(true);
+	  points[i].setSecure(secure);
 	  return i;
 	}
     }
@@ -122,23 +121,18 @@ void Frame::clearScreen(int numero)
 {
  if(currentScreen!=-1){
   VirtualScreen v=virtualsScreen[currentScreen];
-  EsploraTFT.stroke(BACKGROUND_COLOR_R,BACKGROUND_COLOR_G,BACKGROUND_COLOR_B);
   for(int i=0;i<NB_MAX_POINTS;i++)
     {
-      if(existPoint[i]&&pointsIsInVirtualScreen(points[i],v)){
-	EsploraTFT.point(points[i].x-v.posX,points[i].y-v.posY);
+      if(points[i].fexist()&&points[i].isVisible(v)){
+	points[i].clear(v);
 	
       }
       
     }
   for(int i=0;i<NB_MAX_LINES;i++)
     {
-      if(lines[i].fexist()&&lineIsInVirtualScreen(lines[i],v)){
-	int x1Repare=lines[i].point1.x-v.posX;
-	if(x1Repare<0){
-	  x1Repare=0;
-	}
-	lines[i].draw(v);
+      if(lines[i].fexist()&&lines[i].isVisible(v)){
+	lines[i].clear(v);
 
       }
     }
@@ -149,9 +143,8 @@ boolean Frame::clearPoint(int id)
 {
   if(currentScreen!=-1){
      VirtualScreen v=virtualsScreen[currentScreen];
-    EsploraTFT.stroke(BACKGROUND_COLOR_R,BACKGROUND_COLOR_G,BACKGROUND_COLOR_B);
-    if(existPoint[id]&&pointsIsInVirtualScreen(points[id],v)){
-	EsploraTFT.point(points[id].x-v.posX,points[id].y-v.posY);
+     if(points[id].fexist()&&points[id].isVisible(v)){
+       points[id].clear(v);
 	return true;
     }
     
@@ -168,7 +161,7 @@ int Frame::getPointPositionY(int id)
 }
 void Frame::movePoint(int id,int addx,int addy)
 {
-  if(existPoint[id])
+  if(points[id].fexist())
     {
       clearPoint(id);
       points[id].x+=addx;
@@ -187,12 +180,8 @@ void Frame::moveScreen(int numeroScreen,int x,int y,boolean draw)
 }
 boolean Frame::lineIsInVirtualScreen(Lines l,VirtualScreen v)
 {
-  Points tmp,tmp2;
-  tmp.x=l.point1.x;
-  tmp.y=l.point1.y;
-  tmp2.x=l.point2.x;
-  tmp2.y=l.point2.y;
-  if(pointsIsInVirtualScreen(tmp,v)||pointsIsInVirtualScreen(tmp2,v)){
+
+  if(l.isVisible(v)){
     return true;
   }
   return false;
@@ -200,7 +189,7 @@ boolean Frame::lineIsInVirtualScreen(Lines l,VirtualScreen v)
 }
 boolean Frame::pointsIsInVirtualScreen(Points p,VirtualScreen v)
 {
-  if(p.x>v.posX && p.x < v.posX+v.width && p.y > v.posY && p.y < v.posY+v.heigth)
+  if(p.isVisible(v))
     {
       return true;
     }
@@ -227,15 +216,12 @@ void Frame::drawCurrentScreen()
   for(int i=0;i<NB_MAX_POINTS;i++)
     {
       	 
-      if(existPoint[i])
+      if(points[i].fexist())
 	{
 
 
-	  if(pointsIsInVirtualScreen(points[i],v)){
-	    
-	    EsploraTFT.stroke(points[i].r,points[i].g,points[i].b);
-	  
-	    EsploraTFT.point(points[i].x-v.posX,points[i].y-v.posY);
+	  if(points[i].isVisible(v)){
+	    points[i].draw(v);
 	  }
 	}
     }
@@ -244,7 +230,7 @@ void Frame::drawCurrentScreen()
      
       if(lines[i].fexist()){
 	  
-      	if(lineIsInVirtualScreen(lines[i],v)){
+      	if(lines[i].isVisible(v)){
 	  lines[i].draw(v);
 
        }

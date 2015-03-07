@@ -24,8 +24,8 @@ public :
   void moveScreen(int,int,int,boolean=true);//numeroScreen , addx,addy ,draw the screen at the end 
   void movePoint(int,int,int);//Id point , addx , addy
   
-  int addPoint(int ,int,boolean=false,int=DEF_R,int=DEF_G,int=DEF_B);//x ,y (frame based),boolean isSecurePoint,r,g,b, renvoie l'id du point 
-  int addLine(int ,int,int ,int ,boolean=false,int=DEF_R,int=DEF_G,int=DEF_B);//x1,y1,x2,y2 etc as point
+  int addPoint(int ,int,int,boolean=false,int=DEF_R,int=DEF_G,int=DEF_B);//x ,y,z (frame based),boolean isSecurePoint,r,g,b, renvoie l'id du point 
+  int addLine(int ,int,int,int ,int ,int,boolean=false,int=DEF_R,int=DEF_G,int=DEF_B);//x1,y1,x2,y2 etc as point
   boolean pointsIsInVirtualScreen(Points ,VirtualScreen );
   boolean lineIsInVirtualScreen(Lines,VirtualScreen);
   int getPointPositionX(int);//id  du point
@@ -44,8 +44,6 @@ private:
   int hauteur;
   Points points[NB_MAX_POINTS];
   Lines lines[NB_MAX_LINES];
-  boolean existPoint[NB_MAX_POINTS];
-  boolean isSecurePoint[NB_MAX_POINTS];
   VirtualScreen virtualsScreen[NB_MAX_VIRTUAL_SCREEN];
   boolean existVirtualScreen[NB_MAX_VIRTUAL_SCREEN];
 
